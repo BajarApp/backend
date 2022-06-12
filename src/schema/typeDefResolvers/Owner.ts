@@ -12,9 +12,13 @@ export const typeDefs = gql`
   extend type Query {
     getBusiness(id: String!): Owner
   }
+
+  extend type Mutation {
+    editDescription(description: String): String
+  }
 `;
 
-export const user = {
+export let user = {
   uid: "32423423",
   id: "uuid",
   description: "I like hambuger",
@@ -26,6 +30,12 @@ export const resolvers = {
     getBusiness: (_: any, { id }: { id: string }) => {
       console.log(id);
       return user;
+    },
+  },
+  Mutation: {
+    editDescription: (_: any, { description }: { description: string }) => {
+      user.description = description;
+      return "Updated";
     },
   },
 };

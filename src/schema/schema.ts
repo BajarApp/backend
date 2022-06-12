@@ -15,6 +15,10 @@ const Query = gql`
   type Query {
     _: String
   }
+
+  type Mutation {
+    _: String
+  }
 `;
 
 const resolvers = {};
