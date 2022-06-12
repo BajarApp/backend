@@ -1,4 +1,6 @@
 import { gql } from "apollo-server";
+import { db } from "../../../firebase";
+import { v4 as uuidv4 } from "uuid";
 
 export const typeDefs = gql`
   type Owner {
@@ -15,6 +17,7 @@ export const typeDefs = gql`
 
   extend type Mutation {
     editDescription(description: String): String
+    createUser(description: String, minority: [String]): String
   }
 `;
 
@@ -36,6 +39,24 @@ export const resolvers = {
     editDescription: (_: any, { description }: { description: string }) => {
       user.description = description;
       return "Updated";
+    },
+    createUser: async (
+      _: any,
+      { description, minority }: { description: string; minority: string[] }
+    ) => {
+      try {
+        const generatedId = uuidv4();
+        const docRef = await db.collection("users").doc(generatedId).set({
+          id: generatedId,
+          uid: generatedId,
+          description: description,
+          minority,
+          posts: [],
+        });
+        return "Document written with ID: " + docRef;
+      } catch (e) {
+        return "Error adding document: " + e;
+      }
     },
   },
 };
